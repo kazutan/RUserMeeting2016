@@ -1,0 +1,312 @@
+---
+title: "全国のR勉強会の近況"
+author: "前田和寛"
+date: "2016/11/26"
+output:
+  revealjs::revealjs_presentation:
+    pandoc_args: [
+      '--from', 'markdown+autolink_bare_uris+tex_math_single_backslash-implicit_figures'
+    ]
+    theme: sky
+    center: true
+    self_contained: false
+    reveal_plugins: "chalkboard"
+    reveal_options:
+      chalkboard:
+        theme: whiteboard
+    css: for-revealjs.css
+    output_dir: "./docs"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+knit_print.htmlwidget <- function (widget, ..., options = NULL) 
+{
+	file <- basename(tempfile(fileext = ".html"))
+	selfcontained <- if(is.null(rmarkdown::metadata$self_contained)) TRUE else rmarkdown::metadata$self_contained
+	
+	htmlwidgets::saveWidget(widget, file = file, selfcontained = selfcontained)
+	content <- if (selfcontained) {
+		on.exit(unlink(file), add = TRUE)
+		list(srcdoc = paste(readLines(file), collapse = "\n")) 
+	}
+	else {
+		list(src = file)
+	}
+	
+	x <- htmltools::tag("iframe", content)
+	
+	knitr::knit_print(x, options = options, ...)
+}
+library(leaflet)
+library(dplyr)
+loc <- read.csv("r_community_lonlat.csv")
+```
+
+# はじめに
+
+## 自己紹介
+
+<div class="column1">
+- 比治山大学短期大学部
+- @kazutan (Twitter, GitHub, Qiita)
+- http://kz-md.net/
+- http://blog.kz-md.net/
+</div>
+<div class="column2">
+![icon](pics/user.png)
+</div>
+
+## 今日のおなはし
+
+- 各地のRコミュニティを紹介
+- 抱えている課題
+- どうしたらいいの?
+
+- このスライドのgithubリポジトリは[こちら](https://github.com/kazutan/RUserMeeting2016/)
+
+# 日本のRコミュニティ
+
+## 注意事項
+
+- 以降は私の主観的なものによるものです
+- 全てに参加しているわけではありません
+- 代表的なもので,かつオープンなものだけを取り上げています
+
+## 全国各地に分布してる
+
+Japan.R2016のサイトより:
+
+```{r, echo=FALSE}
+m <- leaflet(loc) %>% 
+  addTiles() %>% 
+  setView(139.0000, 35.0000, zoom =4) %>% 
+  addMarkers(~lng, ~lat, ~locate)
+m
+```
+
+## でも実情は…
+
+オープンなもので観測できているのはこんな感じ。
+
+```{r, echo=FALSE}
+m <- loc %>% 
+  filter(active==1) %>% 
+  leaflet() %>% 
+  addTiles() %>% 
+  setView(139.0000, 38.0000, zoom =5) %>% 
+  addMarkers(~lng, ~lat, ~locate)
+m
+```
+
+
+## 関東エリア
+
+### Tokyo.R([リンク](https://groups.google.com/forum/#!forum/r-study-tokyo))
+
+- 主催者は`@yokkuns`さん
+- 特徴
+    - 国内で(他領域を含めても)屈指の人気
+    - 不定期(年数回)
+    - 企業系中心だけど大学関係者も多数
+    - 新規発表者も多い
+    - Rのあらゆるジャンルで最先端の話題提供
+    - 初心者講習は薄い
+
+## 北海道エリア
+
+### SappoRo.R([リンク](http://kokucheese.com/event/index/423714/))
+
+- 主催者は`@uranoken`さん
+- 特徴
+    - 参加者は10~20
+    - かつて年1回,最近は年に2回
+    - 企業系・研究者が半々
+    - 発表者は固定的だけど,常に新規参入者を確保
+    - 統計モデリング,地理情報系,実践応用系,その他いろいろ
+    - 初心者講習はコロコロかわる
+
+## 中部東海エリア
+
+### Nagoya.R([リンク](https://atnd.org/events/78674))
+
+- 主催者は現在`@kwsk3939`さん
+- 特徴
+    - 参加者は10-25
+    - 年に数回開催,スタートは2010年。
+    - 大学研究者(英語学習系)が中心,企業系が近年増加
+    - 発表者は若干固定的,でも新規も
+    - テキスト処理系,機械学習系が強め
+    - 初心者講習が丁寧
+
+## 関西エリア
+
+### Kobe.R([リンク](https://kobexr.doorkeeper.jp/))
+
+- 特徴
+    - 参加者は10-25
+    - 年数回,ピーク時は月1ペース,最近は停滞。
+    - 企業系が中心
+    - 発表者は多様
+    - データマイニング系,応用が中心
+    - 初心者講習はあまりなし
+
+## 中四国エリア
+
+### HiRoshima.R([リンク](https://hiroshimar.connpass.com/))
+
+- 主催者は`@sakaue`さん
+- 特徴
+    - 参加者は8-15
+    - 不定期で,最近開催されていない
+    - 大学研究者が中心
+    - 発表者は多様
+    - 統計が中心
+    - **初心者講習が最も丁寧**
+
+---
+
+### Hijiyama.R([リンク](https://atnd.org/events/81359))
+
+- 主催者は私
+- 特徴
+    - 参加者は15-25
+    - 半年に1回で開催
+    - 大学研究者が中心
+    - 発表者は固定気味,最近多様化
+    - 統計が中心,その他いろいろ
+    - 初心者講習は雑
+
+## 九州エリア
+
+### Fukuoka.R
+
+- 主催者は`@nonki1974`さん
+- 特徴
+    - 参加者は10前後
+    - 不定期開催(年に1,2回)
+    - 発表者は様々
+    - データマイニングなど
+    - 初心者講習は基礎的なところから
+
+
+# R勉強会が抱える課題
+
+## 共通の悩み
+
+- 会場の確保
+- コミュニティの運営
+- 発表者の確保
+
+## 会場の確保
+
+- 以下のようなことをよく言われます
+    - 「会場が遠い」
+    - 「Wi-Fi提供しろ。あとUstな」
+    - 「電源ないの?」
+    - 「懇親会まで遠い」
+    - 「内容が難しい/簡単すぎる」
+    - 「会場費無料にできないの?」
+    - 「飲み物とお茶菓子は?」
+    - 「部屋のサイズがあってない」 など
+
+---
+
+### これらを最適化しないといけない
+- 参加人数の推定
+    - さらに参加者のレベルも
+- 利便性の高い立地
+- 会場使用料
+- 電源、Wi-Fiその他の手配 など
+
+## コミュニティ運営
+
+- コミュニティなので単発じゃなく**継続的**
+    - 日程・会場手配
+    - 告知・申込用サイト作成
+    - 参加者、発表者管理
+    - 懇親会の手配
+- 常連と新規のバランス
+
+これら**全てを継続的に**していかないといけない
+
+## 発表者の確保
+
+- 誰かが発表なり講師をしないと進まない
+    - 初心者セッションをするかどうか
+    - 応用やLTの枠をどうするか
+
+企画したものの発表者が集まらないと…
+
+## まとめると
+
+主催の負担が非常に高い
+
+# どうしたらいい?
+
+## そもそも勉強会は必要?
+
+- 場合によっては、終了という選択肢も
+    - 会場手配が厳しい
+    - 発表者が集まらない
+    - **主催が忙しくなった**あるいは移動した
+    - **継続が義務感に**なった
+- でもできるなら続いてほしい
+    - 全国のコミュニティからアイデアを考えてみる
+
+## 主催者をひとりにしない
+
+- 単独のリスク
+    - 負荷が非常に高い
+    - 本人の都合によって終了になる可能性
+- 継承やチームで
+    - Nagoya.Rは先輩から後輩へ継承
+    - 会場・進行・初心者セッションなど分担
+
+## 初心者セッションのコスト低減
+
+- 初心者セッションはかなり難しい
+    - ガチ初心者と自称初心者
+    - ガチ初向けには**正直時間がたりない**
+    - 自称初向けを意識すると怒られる
+- でも裾野や新規を増やすためには必須
+
+---
+
+### 最適解はない…でもある程度は
+
+- 完全に二部構成にする(Tokyo.Rなど)
+    - 対象者を明確に分けてしまう
+    - 自称初心者を無視する
+- 初心者資料を共有・共同開発
+    - こそっと準備中
+
+## ネタLTを積極的に
+
+- よくある会話:
+    - 「発表してみなよ」
+    - 「私みたいなレベルじゃ…」
+- 発表の敷居をさげるために(Tokyo.R, SappoRo.Rなど)
+    - **常連が率先して「ネタLT」**をやる
+        - 出来る限り軽い、さくっとしたものを
+        - 笑いから生まれる一体感、重要
+    - やはり学生を積極的に確保したい(Hijiyama.Rなど)
+        - おじさんは大胆になりにくくなってしまう
+
+## 会場探しは…やっぱり難しい
+
+- 結局効いてくるのはネットワーク(Hiroshima.Rなど)
+    - 広大の西条キャンパスはかなり不便
+        - 広島市内で開催したい
+        - コミュニティから会場提供の挙手
+- とはいえ施設や規模の兼ね合い
+    - ある程度は割り切っていくべき
+
+# さいごに
+
+## ぜひ地方にも来てください
+
+- slackのr-wakalangにcommunityというチャンネル
+    - ここに各地のR関連イベントを流して共有しています
+
+Enjoy!
