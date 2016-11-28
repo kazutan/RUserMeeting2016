@@ -54,7 +54,7 @@ loc <- read.csv("r_community_lonlat.csv")
 - http://blog.kz-md.net/
 </div>
 <div class="column2">
-![icon](pics/user.png)
+![icon](./pics/user.png)
 </div>
 
 ## 今日のおなはし
