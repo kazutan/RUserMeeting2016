@@ -14,7 +14,7 @@ output:
     reveal_options:
       chalkboard:
         theme: whiteboard
-    css: for-revealjs.css
+    css: ./for-revealjs.css
     output_dir: "./docs"
 ---
 
